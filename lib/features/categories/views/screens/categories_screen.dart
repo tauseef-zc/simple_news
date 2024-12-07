@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:news_app/features/categories/entity/category_item.dart';
 import 'package:news_app/features/categories/views/widgets/category_card.dart';
 import 'package:news_app/widgets/app_navigation_bar.dart';
+import 'package:news_app/widgets/custom_safe_area.dart';
 import 'package:news_app/widgets/page_title.dart';
 
 class CategoryScreen extends ConsumerWidget {
@@ -21,9 +22,8 @@ class CategoryScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
 
-    return SafeArea(
+    return CustomSafeArea(
         child: Scaffold(
-      backgroundColor: Colors.white,
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(

@@ -25,8 +25,6 @@ class TrendingCard extends StatelessWidget {
           );
         },
         child: Card(
-        shadowColor: Colors.white,
-        color: Colors.grey.shade100,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16.0),
         ),

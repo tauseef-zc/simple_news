@@ -6,6 +6,7 @@ import 'package:news_app/features/home/models/news.dart';
 import 'package:news_app/features/home/views/widgets/latest_news_list.dart';
 import 'package:news_app/utils/debouncer.dart';
 import 'package:news_app/widgets/app_navigation_bar.dart';
+import 'package:news_app/widgets/custom_safe_area.dart';
 import 'package:news_app/widgets/page_title.dart';
 
 class ExploreScreen extends ConsumerStatefulWidget {
@@ -29,9 +30,8 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
 
     controller.value = TextEditingValue(text: searchNotifier.term);
 
-    return SafeArea(
+    return CustomSafeArea(
       child: Scaffold(
-        backgroundColor: Colors.white,
         body: NotificationListener<ScrollNotification>(
           onNotification: (scrollNotification) {
             if (scrollNotification.metrics.pixels == scrollNotification.metrics.maxScrollExtent && showSearch) {

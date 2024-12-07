@@ -9,6 +9,7 @@ import 'package:news_app/features/explore/views/screens/news_detail_screen.dart'
 import 'package:news_app/features/favourites/views/screens/favourite_screen.dart';
 import 'package:news_app/features/home/models/news.dart';
 import 'package:news_app/features/home/views/screens/home_screen.dart';
+import 'package:news_app/features/settings/settings_screen.dart';
 
 final routeProvider = Provider<GoRouter>((ref) {
   return GoRouter(
@@ -48,6 +49,13 @@ final routeProvider = Provider<GoRouter>((ref) {
         pageBuilder: (context, state) {
           final news = state.extra as News;
           return _buildPageWithAnimation(state, NewsDetailScreen(news), _fadeTransition);
+        },
+      ),
+      GoRoute(
+        path: '/settings',
+        name: settingsRoute,
+        pageBuilder: (context, state) {
+          return _buildPageWithAnimation(state, const SettingsScreen(), _fadeTransition);
         },
       ),
     ],

@@ -36,73 +36,76 @@ class LatestNewsList extends ConsumerWidget {
     final publishDate = Jiffy.parseFromDateTime(newsItem.publishedAt).fromNow();
     return Padding(
       padding: const EdgeInsets.only(bottom: 15.0),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.grey.shade100,
-          borderRadius: BorderRadius.circular(16.0),
-        ),
-        child: Row(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(16.0),
-                child: Image.network(
-                  newsItem.urlToImage ?? '',
-                  width: 100,
-                  height: 100,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Image.network(
-                      'https://placehold.co/200x200.jpg?text=image',
+      child: Builder(
+        builder: (context) {
+          return Container(
+            decoration: BoxDecoration(
+              color: Theme.of(context).cardTheme.color,
+              borderRadius: BorderRadius.circular(16.0),
+            ),
+            child: Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(16.0),
+                    child: Image.network(
+                      newsItem.urlToImage ?? '',
                       width: 100,
                       height: 100,
                       fit: BoxFit.cover,
-                    );
-                  },
+                      errorBuilder: (context, error, stackTrace) {
+                        return Image.network(
+                          'https://placehold.co/200x200.jpg?text=image',
+                          width: 100,
+                          height: 100,
+                          fit: BoxFit.cover,
+                        );
+                      },
+                    ),
+                  ),
                 ),
-              ),
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.only(top: 16, right: 16, bottom: 16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      publishDate,
-                      style: const TextStyle(
-                        fontSize: 14.0,
-                        color: Colors.grey,
-                      ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 16, right: 16, bottom: 16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          publishDate,
+                          style: const TextStyle(
+                            fontSize: 14.0,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        Text(
+                          newsItem.title,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.bold,
+                            height: 1.2
+                          ),
+                        ),
+                        const SizedBox(height: 8.0),
+                        Text(
+                          newsItem.source ?? '',
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontSize: 14.0,
+                            fontWeight: FontWeight.w600
+                          ),
+                        ),
+                      ],
                     ),
-                    Text(
-                      newsItem.title,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.bold,
-                        height: 1.2
-                      ),
-                    ),
-                    const SizedBox(height: 8.0),
-                    Text(
-                      newsItem.source ?? '',
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        fontSize: 14.0,
-                        color: Colors.black87,
-                        fontWeight: FontWeight.w600
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
-              ),
+              ],
             ),
-          ],
-        ),
+          );
+        }
       ),
     );
   }

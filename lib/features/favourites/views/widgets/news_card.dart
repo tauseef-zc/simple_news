@@ -12,14 +12,12 @@ class NewsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+
+    return GestureDetector(
       onTap: () {
         context.pushNamed(singleNewsRoute, extra: news);
       },
       child: Card(
-        elevation: 4,
-        shadowColor: Colors.white,
-        color: Colors.grey.shade100,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16.0),
         ),

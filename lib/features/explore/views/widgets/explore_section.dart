@@ -50,18 +50,13 @@ class ExploreSection extends ConsumerWidget {
           Wrap(
             spacing: 8,
             children: popularTags.map(
-                  (tag) => InkWell(
+                  (tag) => GestureDetector(
                     onTap: () {
                       searchNotifier.setSearchTerm(tag);
                       searchNotifier.setShowSearch();
                     },
                     child: Chip(
                       label: Text(tag),
-                      shape: StadiumBorder(
-                        side: BorderSide(color: NewsTheme.primaryColor.shade100),
-                      ),
-                      backgroundColor: NewsTheme.primaryColor.shade50,
-                      surfaceTintColor: NewsTheme.primaryColor.shade100,
                     ),
                   ),
             ).toList(),

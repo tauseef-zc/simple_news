@@ -16,11 +16,8 @@ class PageTitle extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(title,
-            style: NewsTheme.logoTitleOne.copyWith(
-              fontWeight: FontWeight.w500,
-              fontSize: 32,
-            ),
-            textAlign: TextAlign.left),
+            style: Theme.of(context).textTheme.titleLarge,
+        ),
         const SizedBox(height: 4),
         Container(
           height: 2,

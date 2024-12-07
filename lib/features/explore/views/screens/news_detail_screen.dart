@@ -5,18 +5,41 @@ import 'package:jiffy/jiffy.dart';
 import 'package:news_app/features/favourites/controllers/favorite_news_controller.dart';
 import 'package:news_app/features/home/models/news.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class NewsDetailScreen extends ConsumerWidget {
+class NewsDetailScreen extends ConsumerStatefulWidget {
   final News news;
-
-  const NewsDetailScreen(
-      this.news, {
-        super.key,
-      });
+  const NewsDetailScreen(this.news,{super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<NewsDetailScreen> createState() => _NewsDetailScreen();
+}
+
+class _NewsDetailScreen extends ConsumerState<NewsDetailScreen> {
+
+  bool status = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkFavourites();
+  }
+
+  Future<void> _checkFavourites() async {
+    final prefs = SharedPreferencesAsync();
+    List<String> favourites = await prefs.getStringList('favourites') ?? [];
+    print(favourites);
+    print(favourites.contains(widget.news.title));
+
+    setState(() {
+      status = favourites.contains(widget.news.title);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final favoriteNotifier = ref.read(favoriteNewsProvider.notifier);
+    News news = widget.news;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -56,8 +79,14 @@ class NewsDetailScreen extends ConsumerWidget {
     );
   }
 
-  Widget _scrollableSheet(News news, FavoriteNewsNotifier favoriteNotifier) {
+  DraggableScrollableSheet _scrollableSheet(
+      News news,
+      FavoriteNewsNotifier favoriteNotifier
+    ) {
+
     final publishDate = Jiffy.parseFromDateTime(news.publishedAt).fromNow();
+    print(status);
+
     return DraggableScrollableSheet(
       initialChildSize: 0.7,
         maxChildSize: 1.0,
@@ -101,14 +130,28 @@ class NewsDetailScreen extends ConsumerWidget {
                       ),
                       InkWell(
                         onTap: () async {
-                          bool status = await favoriteNotifier.addFavorite(news);
-                          if (status) {
-                            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("News added to favorites")));
+                          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                          if(!status){
+                            bool added = await favoriteNotifier.addFavorite(news);
+                            if (added) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(content: Text("News added to favorites"))
+                              );
+                            }
+                          }else{
+                            bool removed = await favoriteNotifier.deleteFavorite(news.title);
+                            if(removed){
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(content: Text("News removed from favorites"))
+                              );
+                            }
                           }
+                          setState(() {
+                            status = !status;
+                          });
                         },
                         child: Icon(
-                          news.isSaved == true ? Icons.bookmark : Icons.bookmark_border_rounded,
+                          status ? Icons.bookmark : Icons.bookmark_border_rounded,
                           size: 40,
                           weight: 1,
                           color: Colors.grey,

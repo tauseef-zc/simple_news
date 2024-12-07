@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:news_app/features/categories/controllers/category_news.dart';
 import 'package:news_app/features/home/views/widgets/latest_news_list.dart';
+import 'package:news_app/widgets/custom_safe_area.dart';
 import 'package:news_app/widgets/page_title.dart';
 
 class CategoryNewsScreen extends ConsumerStatefulWidget {
@@ -38,13 +39,9 @@ class _CategoryNewsScreenState extends ConsumerState<CategoryNewsScreen> {
     final categoryNewsNotifier = ref.read(categoryNewsProvider.notifier);
     final newsList = categoryNews[widget.category] ?? [];
 
-    return SafeArea(
+    return CustomSafeArea(
       child: Scaffold(
-        backgroundColor: Colors.white,
         appBar: AppBar(
-          backgroundColor: Colors.white,
-          surfaceTintColor: Colors.white,
-          title: const Text("News Categories"),
           centerTitle: true,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),

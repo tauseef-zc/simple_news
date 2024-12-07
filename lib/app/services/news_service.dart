@@ -1,18 +1,13 @@
 import 'dart:convert';
 import 'dart:math';
 import 'package:http/http.dart' as http;
-import 'package:news_app/app/database/db_manager.dart';
 import 'package:news_app/features/home/models/news.dart';
 import 'package:news_app/utils/constants.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class NewsService {
 
-  static DBManager dbManager = DBManager.defaultDatabase();
 
-  static Future<List<dynamic>> getFavourites() async {
-    return await dbManager.query('SELECT title FROM news');
-  }
-  
   static Future<List<News>> fetchHeadlines(
       {int page = 1, int pageSize = 20}
   ) async {
@@ -105,12 +100,17 @@ class NewsService {
 
 
   static Future<List<News>> formatData(List data) async {
-    List<dynamic> titles = await getFavourites();
+    final SharedPreferencesAsync prefs = SharedPreferencesAsync();
+    bool isFavourite = false;
+    Future<List<String>?> favourites= prefs.getStringList('favourites');
+
     return data
         .where((json) => json['id'] != 'none' && json['title'] != '[Removed]')
         .map((json){
           json['id'] = Random().nextInt(1000000);
-          json['isSaved'] = titles.contains(json['title']);
+          isFavourite = false;
+          favourites.then((value) => isFavourite = value!.contains(json['title']));
+          json['isSaved'] = isFavourite;
           return News.fromJson(json);
         })
         .toList();

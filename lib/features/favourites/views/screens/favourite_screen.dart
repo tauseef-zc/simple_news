@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:news_app/main.dart';
 import 'package:news_app/widgets/app_navigation_bar.dart';
+import 'package:news_app/widgets/custom_safe_area.dart';
 import 'package:news_app/widgets/page_title.dart';
 import '../../controllers/favorite_news_controller.dart';
 import '../widgets/news_card.dart';
@@ -13,7 +13,7 @@ class FavoriteNewsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final favoriteNews = ref.watch(favoriteNewsProvider);
 
-    return SafeArea(
+    return CustomSafeArea(
         child: Scaffold(
             body: Container(
               padding: const EdgeInsets.all(20.0),
@@ -49,7 +49,7 @@ class FavoriteNewsScreen extends ConsumerWidget {
                           news: news,
                           onDelete: () => ref
                               .read(favoriteNewsProvider.notifier)
-                              .deleteFavorite(news.id),
+                              .deleteFavorite(news.title),
                         );
                       },
                     ),

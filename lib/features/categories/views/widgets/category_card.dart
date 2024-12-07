@@ -14,7 +14,7 @@ class CategoryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.grey.shade100,
+        color: Theme.of(context).cardTheme.color,
         borderRadius: BorderRadius.circular(16.0),
       ),
       child: InkWell(
@@ -34,7 +34,7 @@ class CategoryCard extends StatelessWidget {
               height: 80,
               width: 80,
               theme: SvgTheme(
-                currentColor: NewsTheme.primaryColor
+                currentColor: Theme.of(context).primaryColor
               ),
             ),
             const SizedBox(height: 12),

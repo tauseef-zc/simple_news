@@ -41,6 +41,9 @@ class _AppNavigationBarState extends State<AppNavigationBar> {
         case 3:
           context.replaceNamed(favouriteRoute);
           break;
+        case 4:
+          context.replaceNamed(settingsRoute);
+          break;
       }
     }
   }
@@ -49,9 +52,7 @@ class _AppNavigationBarState extends State<AppNavigationBar> {
   Widget build(BuildContext context) {
     return BottomNavigationBar(
       type: BottomNavigationBarType.fixed,
-      backgroundColor: Colors.white,
       selectedItemColor: Theme.of(context).primaryColor,
-      unselectedItemColor: Colors.grey,
       showUnselectedLabels: true,
       items: const [
         BottomNavigationBarItem(
@@ -69,6 +70,10 @@ class _AppNavigationBarState extends State<AppNavigationBar> {
         BottomNavigationBarItem(
           icon: Icon(Icons.bookmark),
           label: 'Favourites',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.settings),
+          label: 'Settings',
         ),
       ],
       currentIndex: _currentIndex,

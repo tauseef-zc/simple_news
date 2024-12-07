@@ -6,6 +6,7 @@ import 'package:news_app/features/home/views/widgets/latest_news_list.dart';
 import 'package:news_app/features/home/views/widgets/headline_slider.dart';
 import 'package:news_app/utils/theme.dart';
 import 'package:news_app/widgets/app_navigation_bar.dart';
+import 'package:news_app/widgets/custom_safe_area.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -27,9 +28,8 @@ class HomeScreen extends ConsumerWidget {
       }
     });
 
-    return SafeArea(
+    return CustomSafeArea(
       child: Scaffold(
-        backgroundColor: Colors.white,
         body: RefreshIndicator(
           onRefresh: () async {
             await headlineNewsNotifier.seedFresh();
@@ -48,7 +48,6 @@ class HomeScreen extends ConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 5),
                   _buildLogo(context),
                   const SizedBox(height: 20),
                   _buildSectionTitle(context, 'Headlines'),
@@ -105,7 +104,9 @@ class HomeScreen extends ConsumerWidget {
         Row(
           children: [
             Text('Simple', style: NewsTheme.logoTitleOne),
-            Text('News', style: Theme.of(context).textTheme.headlineLarge),
+            Text('News', style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                color: Theme.of(context).primaryColor
+            )),
           ],
         ),
         Container(

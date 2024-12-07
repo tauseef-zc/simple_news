@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:jiffy/jiffy.dart';
 
 class News {
@@ -12,7 +11,7 @@ class News {
   final String? url;
   final String? content;
   final DateTime publishedAt;
-  bool? isSaved;
+  final bool? isSaved;
 
   News({
     required this.id,
