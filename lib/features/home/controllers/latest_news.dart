@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:news_app/core/services/news_service.dart';
+import 'package:news_app/app/services/news_service.dart';
 import 'package:news_app/features/home/models/news.dart';
 
 class LatestNewsNotifier extends StateNotifier<List<News>> {
@@ -20,7 +20,7 @@ class LatestNewsNotifier extends StateNotifier<List<News>> {
 
         _isLoading = true;
         try {
-            final newNews = await NewsService.fetchLatestNews('general', page: _currentPage);
+            final newNews = await NewsService.fetchLatestNews(page: _currentPage);
             if (newNews.isNotEmpty) {
                 state = List.from(state)..addAll(newNews);
                 _currentPage++;

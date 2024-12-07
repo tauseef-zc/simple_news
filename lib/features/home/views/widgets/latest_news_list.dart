@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:jiffy/jiffy.dart';
+import 'package:news_app/app/routes/routes.dart';
 import '../../models/news.dart';
 
-class LatestNewsList extends StatelessWidget {
+class LatestNewsList extends ConsumerWidget {
   final List<News> news;
 
   const LatestNewsList({
@@ -9,18 +13,27 @@ class LatestNewsList extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return ListView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemCount: news.length,
       itemBuilder: (context, index) {
-        return _buildNewsItem(news[index]);
+        return InkWell(
+          onTap: () {
+            context.pushNamed(
+              singleNewsRoute,
+              extra: news[index]
+            );
+          },
+          child: _buildNewsItem(news[index]),
+        );
       },
     );
   }
 
   Widget _buildNewsItem(News newsItem) {
+    final publishDate = Jiffy.parseFromDateTime(newsItem.publishedAt).fromNow();
     return Padding(
       padding: const EdgeInsets.only(bottom: 15.0),
       child: Container(
@@ -41,7 +54,7 @@ class LatestNewsList extends StatelessWidget {
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) {
                     return Image.network(
-                      'https://placehold.co/600x400.jpg?text=image',
+                      'https://placehold.co/200x200.jpg?text=image',
                       width: 100,
                       height: 100,
                       fit: BoxFit.cover,
@@ -57,22 +70,31 @@ class LatestNewsList extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
+                      publishDate,
+                      style: const TextStyle(
+                        fontSize: 14.0,
+                        color: Colors.grey,
+                      ),
+                    ),
+                    Text(
                       newsItem.title,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                         fontSize: 16.0,
                         fontWeight: FontWeight.bold,
+                        height: 1.2
                       ),
                     ),
                     const SizedBox(height: 8.0),
                     Text(
-                      newsItem.description ?? '',
+                      newsItem.source ?? '',
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                         fontSize: 14.0,
-                        color: Colors.grey,
+                        color: Colors.black87,
+                        fontWeight: FontWeight.w600
                       ),
                     ),
                   ],

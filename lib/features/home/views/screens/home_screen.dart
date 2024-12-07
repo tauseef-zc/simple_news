@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:news_app/features/home/providers/latest_news.dart';
-import 'package:news_app/features/home/providers/news_headlines.dart';
+import 'package:news_app/features/home/controllers/latest_news.dart';
+import 'package:news_app/features/home/controllers/news_headlines.dart';
 import 'package:news_app/features/home/views/widgets/latest_news_list.dart';
 import 'package:news_app/features/home/views/widgets/headline_slider.dart';
 import 'package:news_app/utils/theme.dart';
@@ -12,14 +12,18 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final headlinesAsyncValue = ref.watch(headlinesProvider);
+    final headlineNews = ref.watch(newsHeadlineProvider);
     final latestNews = ref.watch(latestNewsProvider);
     final latestNewsNotifier = ref.read(latestNewsProvider.notifier);
+    final headlineNewsNotifier = ref.read(newsHeadlineProvider.notifier);
 
     // Fetch initial data when the widget is built
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (latestNews.isEmpty) {
         latestNewsNotifier.fetchNextPage();
+      }
+      if(headlineNews.isEmpty){
+        headlineNewsNotifier.fetchHeadlines();
       }
     });
 
@@ -28,12 +32,14 @@ class HomeScreen extends ConsumerWidget {
         backgroundColor: Colors.white,
         body: RefreshIndicator(
           onRefresh: () async {
+            await headlineNewsNotifier.seedFresh();
             await latestNewsNotifier.fetchLatestNews();
           },
           child: NotificationListener<ScrollNotification>(
             onNotification: (scrollNotification) {
               if (scrollNotification.metrics.pixels == scrollNotification.metrics.maxScrollExtent) {
                 latestNewsNotifier.fetchNextPage();
+
               }
               return false;
             },
@@ -42,27 +48,28 @@ class HomeScreen extends ConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 5),
                   _buildLogo(context),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 20),
                   _buildSectionTitle(context, 'Headlines'),
                   const SizedBox(height: 10),
-                  headlinesAsyncValue.when(
-                    data: (headlines) => SizedBox(
-                      height: MediaQuery.of(context).size.height / 4,
-                      child: HeadlineSlider(headlines: headlines),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height / 4,
+                    width: double.maxFinite,
+                    child: headlineNews.isNotEmpty ?
+                    HeadlineSlider(headlines: headlineNews) :
+                    Center(
+                        child: CircularProgressIndicator(color: Theme.of(context).primaryColor)
                     ),
-                    loading: () => const Center(
-                      child: CircularProgressIndicator(color: Colors.orangeAccent),
-                    ),
-                    error: (error, stack) => Center(child: Text('Error: $error')),
                   ),
                   const SizedBox(height: 20),
                   _buildSectionTitle(context, 'Latest news'),
                   const SizedBox(height: 10),
                   Expanded(
                     child:latestNews.isEmpty
-                      ? const Center(child: CircularProgressIndicator(color: Colors.orangeAccent))
+                      ? Center(
+                        child: CircularProgressIndicator(color: Theme.of(context).primaryColor)
+                      )
                       : ListView.builder(
                       itemCount: latestNews.length,
                       itemBuilder: (context, index) {
@@ -70,9 +77,9 @@ class HomeScreen extends ConsumerWidget {
                           return Column(
                             children: [
                               LatestNewsList(news: [latestNews[index]]),
-                              const Padding(
-                                padding: EdgeInsets.symmetric(vertical: 16.0),
-                                child: CircularProgressIndicator(color: Colors.orangeAccent),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                                child: CircularProgressIndicator(color:  Theme.of(context).primaryColor),
                               ),
                             ],
                           );
@@ -92,10 +99,20 @@ class HomeScreen extends ConsumerWidget {
   }
 
   Widget _buildLogo(BuildContext context) {
-    return Row(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Simple', style: NewsTheme.logoTitleOne),
-        Text('News', style: Theme.of(context).textTheme.headlineLarge),
+        Row(
+          children: [
+            Text('Simple', style: NewsTheme.logoTitleOne),
+            Text('News', style: Theme.of(context).textTheme.headlineLarge),
+          ],
+        ),
+        Container(
+          height: 2,
+          width: 50,
+          color: Theme.of(context).primaryColor,
+        ),
       ],
     );
   }

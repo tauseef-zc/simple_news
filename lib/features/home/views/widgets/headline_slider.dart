@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:news_app/app/routes/routes.dart';
 import 'package:news_app/features/home/models/news.dart';
 
 class HeadlineSlider extends ConsumerWidget {
@@ -22,7 +23,10 @@ class HeadlineSlider extends ConsumerWidget {
               borderRadius: BorderRadius.all(Radius.circular(10))
           ),
           child: GestureDetector(
-            onTap: () => context.go('/news/${news.id}'),
+            onTap: () => context.pushNamed(
+                singleNewsRoute,
+                extra: news
+            ),
             child: Stack(
               fit: StackFit.expand,
               children: [

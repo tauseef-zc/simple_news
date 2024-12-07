@@ -1,28 +1,60 @@
+import 'dart:math';
+
+import 'package:jiffy/jiffy.dart';
+
 class News {
-  final String id;
-  final String? author;
+  final int id;
   final String title;
   final String? description;
-  final String? urlToImage;
+  final String? source;
+  final String? author;
+  final String urlToImage;
+  final String? url;
   final String? content;
+  final DateTime publishedAt;
+  bool? isSaved;
 
   News({
     required this.id,
-    this.author,
     required this.title,
+    required this.urlToImage,
+    required this.publishedAt,
+    this.author,
+    this.source,
     this.description,
-    this.urlToImage,
+    this.url,
     this.content,
+    this.isSaved
   });
 
   factory News.fromJson(Map<String, dynamic> json) {
     return News(
-      id: json['source']['id'] ?? "none",
+      // generate a unique id for each news item in the database,
+      id: json['id'] ?? Random().nextInt(10000),
       author: json['author'],
-      title: json['title'] ?? "No Title",
+      source: json['source']['name'] ?? "",
+      title: json['title'] ?? "",
       description: json['description'],
-      urlToImage: json['urlToImage'] ?? "https://placehold.co/600x400.jpg?text=image",
+      url: json['url'],
+      urlToImage: json['urlToImage'] ?? "https://placehold.co/200x200.jpg?text=image",
       content: json['content'],
+      publishedAt: DateTime.parse(json['publishedAt']),
+      isSaved: json['isSaved'] ?? false,
+    );
+  }
+
+  factory News.fromMap(Map<String, dynamic> json) {
+    return News(
+      id: json['id'],
+      author: json['author'],
+      source: json['source'],
+      title: json['title'],
+      description: json['description'],
+      url: json['url'],
+      urlToImage: json['urlToImage'] ?? "https://placehold.co/200x200.jpg?text=image",
+      content: json['content'],
+      publishedAt: DateTime.parse(json['publishedAt']),
+      isSaved: json['isSaved'] ?? false,
     );
   }
 
@@ -30,10 +62,26 @@ class News {
     return {
       'id': id,
       'author': author,
+      'source': source,
       'title': title,
       'description': description,
       'urlToImage': urlToImage,
-      'content': content
+      'url': url,
+      'content': content,
+      'publishedAt': Jiffy.parseFromDateTime(publishedAt).format(pattern: "yyyy-MM-dd HH:mm:ss"),
+    };
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'author': author,
+      'source': source,
+      'title': title,
+      'description': description,
+      'urlToImage': urlToImage,
+      'url': url,
+      'content': content,
+      'publishedAt': Jiffy.parseFromDateTime(publishedAt).format(pattern: "yyyy-MM-dd HH:mm:ss"),
     };
   }
 

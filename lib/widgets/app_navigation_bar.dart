@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:news_app/core/routes/routes.dart';
+import 'package:news_app/app/routes/routes.dart';
 
 class AppNavigationBar extends StatefulWidget {
   const AppNavigationBar({
@@ -39,7 +39,7 @@ class _AppNavigationBarState extends State<AppNavigationBar> {
           context.replaceNamed(exploreRoute);
           break;
         case 3:
-          context.replaceNamed(savedRoute);
+          context.replaceNamed(favouriteRoute);
           break;
       }
     }
@@ -50,7 +50,7 @@ class _AppNavigationBarState extends State<AppNavigationBar> {
     return BottomNavigationBar(
       type: BottomNavigationBarType.fixed,
       backgroundColor: Colors.white,
-      selectedItemColor: Colors.orangeAccent,
+      selectedItemColor: Theme.of(context).primaryColor,
       unselectedItemColor: Colors.grey,
       showUnselectedLabels: true,
       items: const [
@@ -68,7 +68,7 @@ class _AppNavigationBarState extends State<AppNavigationBar> {
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.bookmark),
-          label: 'Saved Items',
+          label: 'Favourites',
         ),
       ],
       currentIndex: _currentIndex,
