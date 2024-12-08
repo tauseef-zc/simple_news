@@ -18,7 +18,7 @@ class TrendingCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final publishDate = Jiffy.parseFromDateTime(news[id].publishedAt).fromNow();
-    return InkWell(
+    return GestureDetector(
         onTap: () {
           context.pushNamed(singleNewsRoute,
             extra: news[id]

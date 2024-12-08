@@ -19,7 +19,7 @@ class LatestNewsList extends ConsumerWidget {
       physics: const NeverScrollableScrollPhysics(),
       itemCount: news.length,
       itemBuilder: (context, index) {
-        return InkWell(
+        return GestureDetector(
           onTap: () {
             context.pushNamed(
               singleNewsRoute,

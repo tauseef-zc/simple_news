@@ -7,7 +7,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class NewsService {
 
-
   static Future<List<News>> fetchHeadlines(
       {int page = 1, int pageSize = 20}
   ) async {

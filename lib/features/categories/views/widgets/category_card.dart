@@ -17,7 +17,7 @@ class CategoryCard extends StatelessWidget {
         color: Theme.of(context).cardTheme.color,
         borderRadius: BorderRadius.circular(16.0),
       ),
-      child: InkWell(
+      child: GestureDetector(
         onTap: () {
           context.pushNamed(
             categoryNewsRoute,
